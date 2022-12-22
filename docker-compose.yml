@@ -1,0 +1,28 @@
+version: '3.1'
+services:
+  mongo:
+    container_name: my_mogo
+    image: mongo
+    restart: always
+    ports:
+      - '1234:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: xizot1604
+    volumes:
+      - E:/db/mongo:/data/db
+  dev:
+    stdin_open: true
+    tty: true
+    container_name: nestjs_api_dev
+    image: nestjs-api-dev:1.0.0
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: npm run start:dev
+    ports:
+      - 3001:3000
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    restart: unless-stopped
