@@ -1,10 +1,12 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
 export class TodoDto {
   @Expose()
-  @IsNotEmpty()
   id: string;
 
+  @ApiProperty()
+  @IsNotEmpty()
   @Expose()
   title: string;
 
@@ -14,7 +16,4 @@ export class TodoDto {
   @Expose()
   @Transform(({ obj }) => obj.isDone)
   status?: string;
-
-  @Expose()
-  createdAt: Date;
 }
