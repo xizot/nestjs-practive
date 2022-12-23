@@ -1,16 +1,18 @@
-import { UserDto } from './user.dto';
-import { UserRepository } from './user.repository';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { BaseService } from 'src/common/mysql/base.service';
+import { Repository } from 'typeorm';
+import { UserEntity } from './user.entity';
 
-export class UserService {
-    /**
-     *
-     */
-    constructor(userRepository: UserRepository) {}
-    createUser(user: any): any {
-        user.id = 1;
-        user.createdAt = new Date();
-        user.updatedAt = new Date();
-        console.log(user);
-        return UserDto.plainToClass(user);
-    }
+@Injectable()
+export class UserService extends BaseService<
+  UserEntity,
+  Repository<UserEntity>
+> {
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
+  ) {
+    super(userRepository);
+  }
 }

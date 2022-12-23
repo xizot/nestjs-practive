@@ -1,28 +1,15 @@
-version: '3.1'
+version: "3.9"
 services:
-  mongo:
-    container_name: my_mogo
-    image: mongo
-    restart: always
+  my-sql:
+    container_name: my-sql
+    image: mysql:8.0
     ports:
-      - '1234:27017'
+      - "3309:3306"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: xizot1604
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_test
+      MYSQL_USER: xizot
+      MYSQL_PASSWORD: xizot
     volumes:
-      - E:/db/mongo:/data/db
-  dev:
-    stdin_open: true
-    tty: true
-    container_name: nestjs_api_dev
-    image: nestjs-api-dev:1.0.0
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    command: npm run start:dev
-    ports:
-      - 3001:3000
-    volumes:
-      - ./:/app
-      - /app/node_modules
+      - E:/db/mysql:/var/lib/mysql
     restart: unless-stopped

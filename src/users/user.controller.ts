@@ -1,34 +1,60 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  NotFoundException,
   Param,
-  ParseIntPipe,
   Post,
+  Put,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { plainToClass } from 'class-transformer';
+import { DeleteResult } from 'typeorm/index';
+import { EntityId } from 'typeorm/repository/EntityId';
 import { UserDto } from './user.dto';
-import { UserRepository } from './user.repository';
 import { UserService } from './user.service';
-
 @ApiTags('users')
 @Controller('users')
 export class UserController {
-  userService: UserService;
+  // constructor(private moduleRef: ModuleRef) {}
+  constructor(private readonly userService: UserService) {}
 
-  constructor() {
-    const userRepository = new UserRepository();
-    this.userService = new UserService(userRepository);
+  @Get()
+  index(): Promise<UserDto[]> {
+    return this.userService.index();
+  }
+
+  @Get('/:id')
+  async show(@Param('id') id: EntityId): Promise<UserDto> {
+    const user = await this.userService.findById(id);
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return plainToClass(UserDto, user, {
+      excludeExtraneousValues: true,
+    });
   }
 
   @Post()
-  createUser(@Body() user: UserDto): UserDto {
-    return this.userService.createUser(user);
+  async create(@Body() userData: UserDto): Promise<UserDto> {
+    const createdUser = await this.userService.save(userData);
+    return plainToClass(UserDto, createdUser, {
+      excludeExtraneousValues: true,
+    });
   }
 
-  @Get(':id')
-  getUserById(@Param('id', ParseIntPipe) id: number) {
-    console.log(id);
-    return 'test';
+  @Put('/:id')
+  update(
+    @Param('id') id: EntityId,
+    @Body() userData: UserDto,
+  ): Promise<UserDto> {
+    return this.userService.update(id, userData);
+  }
+
+  @Delete('/:id')
+  destroy(@Param('id') id: EntityId): Promise<DeleteResult> {
+    return this.userService.delete(id);
   }
 }
