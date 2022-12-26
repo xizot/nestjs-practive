@@ -18,15 +18,11 @@ export class UserDto extends UserBaseDto {
   @Expose()
   fullname: string;
 
-  @ApiProperty({
-    required: false,
-  })
+  @ApiProperty({ required: false })
   @Expose()
   phoneNumber: string;
 
-  @ApiProperty({
-    required: false,
-  })
+  @ApiProperty({ required: false })
   @Expose()
   age: number;
 

@@ -10,7 +10,7 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 import { DeleteResult } from 'typeorm/index';
 import { EntityId } from 'typeorm/repository/EntityId';
@@ -18,6 +18,7 @@ import { UserDto, UsersDto } from './user.dto';
 import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
 @ApiTags('users')
+@ApiBearerAuth('jwt')
 @Controller('users')
 @UseGuards(AuthGuard('jwt'))
 export class UserController {

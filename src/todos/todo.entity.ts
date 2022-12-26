@@ -12,4 +12,7 @@ export class TodoEntity extends BaseEntity {
     default: false,
   })
   isDone: boolean;
+
+  @Column()
+  userId: string;
 }
