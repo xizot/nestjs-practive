@@ -26,4 +26,9 @@ export class UserEntity extends BaseEntity {
     nullable: true,
   })
   age: number;
+
+  @Column({
+    nullable: true,
+  })
+  refreshToken: string;
 }

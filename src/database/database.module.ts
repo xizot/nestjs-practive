@@ -1,22 +1,19 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import dbConfig from 'src/config/db.config';
+import databaseConfig from 'src/config/database.config';
 import { UserEntity } from 'src/users/user.entity';
 import { TodoEntity } from './../todos/todo.entity';
-
+import { ConfigModule, ConfigService } from '@nestjs/config';
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: dbConfig.databaseConnection,
-      host: dbConfig.databaseHost,
-      port: dbConfig.databasePort,
-      username: dbConfig.databaseUsername,
-      password: dbConfig.databasePassword,
-      database: dbConfig.databaseName,
-      entities: [TodoEntity, UserEntity],
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        ...configService.get('database'),
+        entities: [TodoEntity, UserEntity],
+      }),
+      inject: [ConfigService],
     }),
   ],
-  exports: [TypeOrmModule],
 })
 export class DatabaseModule {}

@@ -7,22 +7,36 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 import { DeleteResult } from 'typeorm/index';
 import { EntityId } from 'typeorm/repository/EntityId';
-import { UserDto } from './user.dto';
+import { UserDto, UsersDto } from './user.dto';
 import { UserService } from './user.service';
+import { AuthGuard } from '@nestjs/passport';
 @ApiTags('users')
 @Controller('users')
+@UseGuards(AuthGuard('jwt'))
 export class UserController {
   // constructor(private moduleRef: ModuleRef) {}
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  index(): Promise<UserDto[]> {
-    return this.userService.index();
+  async index(): Promise<UsersDto> {
+    const users = await this.userService.index();
+
+    console.log(users);
+
+    return plainToClass(
+      UsersDto,
+      { users: users },
+      {
+        excludeExtraneousValues: true,
+      },
+    );
   }
 
   @Get('/:id')

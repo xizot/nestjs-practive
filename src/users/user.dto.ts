@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
-export class UserDto {
+
+export class UserBaseDto {
   @ApiProperty()
   @Expose()
   @IsNotEmpty()
@@ -10,7 +11,9 @@ export class UserDto {
   @ApiProperty()
   @IsNotEmpty()
   password: string;
+}
 
+export class UserDto extends UserBaseDto {
   @ApiProperty()
   @Expose()
   fullname: string;
@@ -26,4 +29,13 @@ export class UserDto {
   })
   @Expose()
   age: number;
+
+  @Expose()
+  createdAt: Date;
+}
+
+export class UsersDto {
+  @Type(() => UserDto)
+  @Expose()
+  users: UserDto[];
 }
