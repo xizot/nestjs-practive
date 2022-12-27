@@ -1,10 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
-import { IsNotEmpty } from 'class-validator';
+import { IsEmail, IsNotEmpty } from 'class-validator';
 
 export class UserBaseDto {
   @ApiProperty()
   @Expose()
+  @IsEmail()
   @IsNotEmpty()
   email: string;
 

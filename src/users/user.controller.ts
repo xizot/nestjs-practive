@@ -29,8 +29,6 @@ export class UserController {
   async index(): Promise<UsersDto> {
     const users = await this.userService.index();
 
-    console.log(users);
-
     return plainToClass(
       UsersDto,
       { users: users },
@@ -42,6 +40,19 @@ export class UserController {
 
   @Get('/:id')
   async show(@Param('id') id: EntityId): Promise<UserDto> {
+    const user = await this.userService.findById(id);
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return plainToClass(UserDto, user, {
+      excludeExtraneousValues: true,
+    });
+  }
+
+  @Get('/account')
+  async account(@Request() request): Promise<UserDto> {
+    const { id } = request.user;
     const user = await this.userService.findById(id);
     if (!user) {
       throw new NotFoundException();
